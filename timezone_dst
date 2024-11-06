@@ -1,0 +1,29 @@
+from timezonefinder import TimezoneFinder
+from datetime import datetime
+import pytz
+
+def get_local_time(lat, lon):
+    # Initialize TimezoneFinder
+    tf = TimezoneFinder()
+    
+    # Find the time zone name for the given latitude and longitude
+    timezone_str = tf.timezone_at(lat=lat, lng=lon)
+    if timezone_str is None:
+        raise ValueError("Could not determine timezone for the provided coordinates.")
+    
+    # Get the current time in UTC
+    utc_time = datetime.utcnow()
+    
+    # Convert to the local time zone, accounting for DST
+    local_tz = pytz.timezone(timezone_str)
+    local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_tz)
+    
+    return local_time, timezone_str
+
+# Example usage with coordinates in the USA (e.g., Los Angeles)
+latitude = 34.0522
+longitude = -118.2437
+
+local_time, timezone = get_local_time(latitude, longitude)
+print(f"Timezone: {timezone}")
+print(f"Local Time: {local_time.strftime('%Y-%m-%d %H:%M:%S %Z%z')}")
