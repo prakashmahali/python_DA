@@ -21,3 +21,30 @@ df = pd.read_csv(io.StringIO(data))
 
 # Display DataFrame
 print(df.head())
+
+
+
+import subprocess
+import pandas as pd
+import io
+
+# Credentials and URL
+username = "your_username"
+password = "your_password"
+url = "https://your_url"
+
+# Curl command with authentication and data parameters
+cmd = 'curl -k -u "{}":"{}" {} -d search="|inputlookup gsam_mtn.csv" -d output_mode=csv -d count=0 -d offset=25000'.format(username, password, url)
+
+# Execute the curl command
+process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+stdout, stderr = process.communicate()
+
+# Check for errors
+if process.returncode != 0:
+    print("Error:", stderr)
+else:
+    # Convert the output to a Pandas DataFrame
+    df = pd.read_csv(io.StringIO(stdout))
+    print(df.head())
+
