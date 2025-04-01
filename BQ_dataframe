@@ -1,0 +1,14 @@
+from google.cloud import bigquery
+import pandas as pd
+
+# Initialize BigQuery client
+client = bigquery.Client()
+
+# Define the BigQuery SQL query
+bq_sql = 'SELECT * FROM `your_project.your_dataset.your_table`'
+
+# Run the query and get the results as a DataFrame
+query_job = client.query(bq_sql)
+df_bq = query_job.to_dataframe()
+
+print(df_bq.head())
